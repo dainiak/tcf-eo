@@ -17,6 +17,9 @@ function filterObjectsByTags(objects, tagsSubset) {
 }
 
 function displayQuestion(questionObject) {
+    if(!questionObject) {
+        return document.createTextNode('Aucune question ne correspond à vos critères.');
+    }
     const div = document.createElement('div');
     div.className = 'card';
 
@@ -27,20 +30,20 @@ function displayQuestion(questionObject) {
         const ul = document.createElement('ul');
         ul.className = 'card-text';
         const topic = document.createElement('li');
-        topic.innerHTML = '<b>Sujet du dialogue:</b> ' + questionObject.s;
+        topic.innerHTML = '<b>Sujet du dialogue:</b> ' + questionObject.s + '. ';
         ul.appendChild(topic);
         const evaluator = document.createElement('li');
-        evaluator.innerHTML = '<b>Rôle d’évaluateur:</b> ' + questionObject.ev;
+        evaluator.innerHTML = '<b>Rôle d’évaluateur:</b> ' + questionObject.ev + '. ';
         ul.appendChild(evaluator);
         const examinee = document.createElement('li');
-        examinee.innerHTML = '<b>Votre rôle:</b> ' + questionObject.ex;
+        examinee.innerHTML = '<b>Votre rôle:</b> ' + questionObject.ex + '. ';
         ul.appendChild(examinee);
         const goal = document.createElement('li');
-        goal.innerHTML = '<b>Votre objectif:</b> ' + questionObject.g;
+        goal.innerHTML = '<b>Votre objectif:</b> ' + questionObject.g + '. ';
         ul.appendChild(goal);
         const details = document.createElement('li');
         details.className = 'text-muted';
-        details.innerHTML = '<b>Détails possibles à demander:</b> ' + questionObject.d.join(', ');
+        details.innerHTML = '<b>Détails possibles à demander:</b> ' + questionObject.d.join(', ') + '. ';
         ul.appendChild(details);
         divBody.appendChild(ul);
     }
