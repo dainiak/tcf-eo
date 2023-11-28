@@ -1,8 +1,3 @@
-let task0 = "Pr\u00e9sentez-vous bri\u00e8vement.";
-let task1 = window.part1_questions;
-let task2 = window.part2_questions;
-let task3 = window.part3_questions;
-
 function getUniqueTags(objects) {
     const tagsSet = new Set();
 
@@ -12,112 +7,113 @@ function getUniqueTags(objects) {
         }
     });
 
-    return Array.from(tagsSet);
+    return Array.from(tagsSet).sort();
 }
 
-console.log(getUniqueTags(task2));
-console.log(getUniqueTags(task3));
-/*
-let task2_tags = [];
-for(let task of task2) {
-    for(let tag of task["tags"]) {
-        if(!task2_tags.includes(tag)) {
-            task2_tags.push(tag);
-        }
+function filterObjectsByTags(objects, tagsSubset) {
+    return objects.filter(obj => {
+        return tagsSubset.length === 0 || tagsSubset.every(tag => obj.t && obj.t.includes(tag));
+    });
+}
+
+function displayQuestion(questionObject) {
+    const div = document.createElement('div');
+    div.className = 'card';
+
+    const divBody = document.createElement('div');
+    divBody.className = 'card-body';
+
+    if(questionObject.ex){
+        const ul = document.createElement('ul');
+        ul.className = 'card-text';
+        const topic = document.createElement('li');
+        topic.innerHTML = '<b>Sujet du dialogue:</b> ' + questionObject.s;
+        ul.appendChild(topic);
+        const evaluator = document.createElement('li');
+        evaluator.innerHTML = '<b>Rôle d’évaluateur:</b> ' + questionObject.ev;
+        ul.appendChild(evaluator);
+        const examinee = document.createElement('li');
+        examinee.innerHTML = '<b>Votre rôle:</b> ' + questionObject.ex;
+        ul.appendChild(examinee);
+        const goal = document.createElement('li');
+        goal.innerHTML = '<b>Votre objectif:</b> ' + questionObject.g;
+        ul.appendChild(goal);
+        const details = document.createElement('li');
+        details.className = 'text-muted';
+        details.innerHTML = '<b>Détails possibles à demander:</b> ' + questionObject.d.join(', ');
+        ul.appendChild(details);
+        divBody.appendChild(ul);
     }
+    else if(questionObject.t) {
+        const p = document.createElement('p');
+        p.className = 'card-text';
+        p.textContent = questionObject.q;
+        divBody.appendChild(p);
+    }
+    else {
+        const p = document.createElement('p');
+        p.className = 'card-text';
+        p.textContent = 'Pr\u00e9sentez-vous bri\u00e8vement et d\u00e9crivez ' + questionObject;
+        divBody.appendChild(p);
+    }
+
+    div.appendChild(divBody);
+    return div;
 }
 
+function createCheckboxes(tags, prefix) {
+    return tags.map((tag, index) => {
+        const div = document.createElement('div');
+        div.className = 'form-check form-check-inline';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = false;
+        checkbox.className = 'form-check-input';
+        checkbox.value = tag;
+        checkbox.id = prefix + 'checkbox' + index;
+
+        const label = document.createElement('label');
+        label.className = 'form-check-label';
+        label.htmlFor = checkbox.id;
+        label.textContent = tag;
+
+        div.appendChild(checkbox);
+        div.appendChild(label);
+
+        return div;
+    });
+}
 
 function gotoTranslation(e) {
     let t = e.target;
-    while(t.tagName.toLowerCase() !== 'tr' && t.id !== 'results-table') {
+    while(t.tagName.toLowerCase() !== 'td') {
         t = t.parentElement;
     }
-    if(t.id === 'results-table')
-        return;
 
-    let phrase = t.querySelector('td:nth-of-type(2)').textContent.trim();
+    let phrase = t.textContent.trim();
     window.open('https://translate.google.com/?sl=fr&tl=en&text=' + phrase + '&op=translate', '_blank');
 }
 
-document.getElementById('search-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const searchInput = document.getElementById('search-input');
-    let part = searchInput.value;
-    part = part.trim().replace(/ /gu, '');
-    searchInput.value = part;
-
-    let types = (
-        (document.getElementById('adjectives').checked ? 'A' : '')
-        + (document.getElementById('nouns').checked ? 'N' : '')
-        + (document.getElementById('verbs').checked ? 'V' : '')
-        + (document.getElementById('adverbs').checked ? 'W' : '')
-    );
-    const results = find(part, types);
-    const tableBody = document.getElementById('table-body');
-
-    for(let row of tableBody.querySelectorAll('tr')) {
-        row.tooltip && row.tooltip.dispose();
-    }
-    tableBody.innerHTML = "";
-
-    let pattern = part.replace(/ /gu, '');
-    if(pattern.startsWith('*')) {
-        pattern = pattern.substring(1);
-    }
-    else if(!pattern.startsWith('^')){
-        pattern = '^' + pattern;
-    }
-    if(pattern.endsWith('*') && !pattern.endsWith('.*')){
-        pattern = pattern.substring(0, pattern.length - 1);
-    }
-    else if (!pattern.endsWith('$')){
-        pattern = pattern + '$';
-    }
-
-    currentPattern = new RegExp(pattern, 'igu');
-
-    results.forEach(triple => {
-        const [word, stem, type] = triple.split(' ');
-        if (document.getElementById('primaryForm').checked && word !== stem){
-            return;
-        }
-        const row = document.createElement('tr');
-        const cellWord = document.createElement('td');
-        cellWord.innerHTML = highlightPart(word);
-        const cellStem = document.createElement('td');
-        cellStem.innerHTML = highlightPart(stem);
-        const cellType = document.createElement('td');
-        cellType.innerHTML = getType(type);
-        row.appendChild(cellWord);
-        row.appendChild(cellStem);
-        row.appendChild(cellType);
-        row.dataset.bsToggle = 'tooltip';
-        row.dataset.bsPlacement = 'bottom';
-        row.dataset.bsTitle = 'Double-click row to translate with Google Translate';
-        tableBody.appendChild(row);
-        row.tooltip = new bootstrap.Tooltip(row);
+for(let taskNumber of [1, 2, 3]) {
+    const questions = window['part' + taskNumber + '_questions'];
+    const tags = getUniqueTags(questions);
+    const checkboxes = createCheckboxes(tags, 'task' + taskNumber + '_');
+    const tagsContainer = document.getElementById('tags' + taskNumber);
+    checkboxes.forEach(checkbox => {
+        tagsContainer.appendChild(checkbox);
     });
 
-    if(results.length === 0) {
-        const row = document.createElement('tr');
-        row.innerHTML = '<td colspan="3" style="text-align: center"><strong>(No results)</strong></td>';
-        tableBody.appendChild(row);
-    }
 
-    tableBody.addEventListener('dblclick', gotoTranslation);
-});
-
-*/
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    let btn = document.getElementById('scrollToTop');
-
-    window.addEventListener('scroll', () => {
-        btn.style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+    document.getElementById('random' + taskNumber).addEventListener('click', () => {
+        const checkedTags = taskNumber > 1 && Array.from(tagsContainer.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+        const objects = taskNumber > 1 ? filterObjectsByTags(questions, checkedTags) : questions;
+        const randomObject = objects[Math.floor(Math.random() * objects.length)];
+        document.getElementById('content' + taskNumber).innerHTML = '';
+        document.getElementById('content' + taskNumber).appendChild(displayQuestion(randomObject));
     });
 
-    btn.addEventListener('click', () => document.body.scrollTop = document.documentElement.scrollTop = 0);
-});
-
+    const contentContainer = document.getElementById('content' + taskNumber);
+    contentContainer.innerHTML = '← Cliquez sur le bouton à gauche pour sélectionner une question aléatoire.';
+    contentContainer.addEventListener('dblclick', gotoTranslation);
+}

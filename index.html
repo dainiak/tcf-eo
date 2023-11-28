@@ -4,9 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <title>TCF Expression Orale — Un outil pour s’y préparer</title>
+    <style>
+        .form-check-inline {
+            display: inline-block;
+            margin-right: 10px; /* Adjust spacing between checkboxes */
+        }
+    </style>
 </head>
 <body>
 
@@ -15,68 +22,41 @@
 
 <main class="my-4">
     <div class="container">
-        <form id="search-form">
-            <div class="mb-3">
-                <div class="input-group">
-                    <input class="form-control" id="search-input" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <div>Mode: </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="mode" id="modeExam" value="modeExam">
-                    <label class="form-check-label" for="startsWith">Complete set </label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="searchType" id="endsWith" value="endsWith">
-                    <label class="form-check-label" for="endsWith">at the end</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="searchType" id="contains" value="contains">
-                    <label class="form-check-label" for="contains">anywhere</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="searchType" id="exact" value="exact">
-                    <label class="form-check-label" for="exact">exact match</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="regexp" id="regexp" value="regexp">
-                    <label class="form-check-label" for="regexp">regexp</label>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <div>Parts of speech: </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input part-of-speech" type="checkbox" id="adjectives" value="adjectives" checked>
-                    <label class="form-check-label" for="adjectives">adjectives</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input part-of-speech" type="checkbox" id="verbs" value="verbs" checked>
-                    <label class="form-check-label" for="verbs">verbs</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input part-of-speech" type="checkbox" id="adverbs" value="adverbs" checked>
-                    <label class="form-check-label" for="adverbs">adverbs</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input part-of-speech" type="checkbox" id="nouns" value="nouns" checked>
-                    <label class="form-check-label" for="nouns">nouns</label>
-                </div>
-            </div>
-        </form>
-
-        <table class="table" id="results-table">
+        <table class="table">
             <thead>
             <tr>
-                <th scope="col">Word</th>
-                <th scope="col">Primary form</th>
-                <th scope="col">Part of speech</th>
+                <th scope="col" class="col-5">Contrôles</th>
+                <th scope="col" class="col-7">Tâches</th>
             </tr>
             </thead>
-            <tbody id="table-body"></tbody>
+            <tbody>
+            <tr>
+                <th scope="row">
+                    <button class="btn btn-primary" id="random1"><i class="fas fa-dice"></i></button>
+                </th>
+                <td id="content1">
+
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <button class="btn btn-primary" id="random2"><i class="fas fa-dice"></i></button>
+                    <div id="tags2"></div>
+                </th>
+                <td id="content2">
+                    Cliquez sur le bouton à gauche pour sélectionner une question aléatoire.
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <button class="btn btn-primary" id="random3"><i class="fas fa-dice"></i></button>
+                    <div id="tags3"></div>
+                </th>
+                <td id="content3">
+                    Cliquez sur le bouton à gauche pour sélectionner une question aléatoire.
+                </td>
+            </tr>
+            </tbody>
         </table>
     </div>
 </main>
@@ -86,14 +66,16 @@
     <div class="container text-center">
         <span class="text-muted">
             Ce site Web est codé par <a href="https://www.dainiak.com" class="link-secondary">Alex Dainiak</a> © 2023.
-            Questions d’examen tirées de groupes Facebook et de diverses sources ouvertes.
+            Questions d’examen tirées de diverses sources ouvertes.
         </span>
     </div>
 </footer>
 
 <button type="button" class="btn btn-secondary" id="scrollToTop" style="position: fixed; bottom: 20px; right: 20px;display: none; transform: rotate(270deg)">&#10140;</button>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+
 
 <script type="text/javascript" charset="UTF-8" src="task-1.js"></script>
 <script type="text/javascript" charset="UTF-8" src="task-2.js"></script>
