@@ -1,4 +1,4 @@
-var task2 = [
+window.part2_questions = [
  {
   "t": ["enfants","ville","sport","culture"],
   "ev": "parent d\u2019\u00e9l\u00e8ve",

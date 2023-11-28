@@ -1,4 +1,4 @@
-var task3 = [
+window.part3_questions = [
  {
   "q": "Apprendre une langue \u00e9trang\u00e8re est difficile. \u00cates-vous d\u2019accord avec cette affirmation?",
   "t": ["\u00e9ducation", "culture"]

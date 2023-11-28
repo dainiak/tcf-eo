@@ -1,4 +1,32 @@
 let task0 = "Pr\u00e9sentez-vous bri\u00e8vement.";
+let task1 = window.part1_questions;
+let task2 = window.part2_questions;
+let task3 = window.part3_questions;
+
+function getUniqueTags(objects) {
+    const tagsSet = new Set();
+
+    objects.forEach(obj => {
+        if (obj.t && Array.isArray(obj.t)) {
+            obj.t.forEach(tag => tagsSet.add(tag));
+        }
+    });
+
+    return Array.from(tagsSet);
+}
+
+console.log(getUniqueTags(task2));
+console.log(getUniqueTags(task3));
+/*
+let task2_tags = [];
+for(let task of task2) {
+    for(let tag of task["tags"]) {
+        if(!task2_tags.includes(tag)) {
+            task2_tags.push(tag);
+        }
+    }
+}
+
 
 function gotoTranslation(e) {
     let t = e.target;
@@ -8,8 +36,8 @@ function gotoTranslation(e) {
     if(t.id === 'results-table')
         return;
 
-    let word = t.querySelector('td:nth-of-type(2)').textContent.trim();
-    window.open('https://translate.google.com/?sl=fr&tl=en&text=' + word + '&op=translate', '_blank');
+    let phrase = t.querySelector('td:nth-of-type(2)').textContent.trim();
+    window.open('https://translate.google.com/?sl=fr&tl=en&text=' + phrase + '&op=translate', '_blank');
 }
 
 document.getElementById('search-form').addEventListener('submit', function(e) {
@@ -80,29 +108,10 @@ document.getElementById('search-form').addEventListener('submit', function(e) {
     tableBody.addEventListener('dblclick', gotoTranslation);
 });
 
+*/
+
+
 document.addEventListener('DOMContentLoaded', function() {
-    let query= window.location.href.match(/q=[^&]*/);
-    query = query ? decodeURI(query[0].substring(2)) : '';
-    let partsOfSpeech = window.location.href.match(/ps=[^&]*/);
-    partsOfSpeech = partsOfSpeech ? partsOfSpeech[0].substring(3) : 'AVNW';
-    let searchType = window.location.href.match(/st=[^&]*/);
-    searchType = searchType ? searchType[0].substring(3) : 'exact';
-    let regexp = window.location.href.match(/re=[^&]*/);
-    regexp = regexp ? regexp[0].substring(3) : '0';
-    let primaryForm = window.location.href.match(/pf=[^&]*/);
-    primaryForm = primaryForm ? primaryForm[0].substring(3) : '0';
-
-    document.getElementById('search-input').value = query;
-    document.getElementById('adjectives').checked = partsOfSpeech.indexOf('A') > -1;
-    document.getElementById('nouns').checked = partsOfSpeech.indexOf('N') > -1;
-    document.getElementById('verbs').checked = partsOfSpeech.indexOf('V') > -1;
-    document.getElementById('adverbs').checked = partsOfSpeech.indexOf('W') > -1;
-    document.getElementById(searchType).checked = true;
-    document.getElementById('regexp').checked = regexp === '1';
-    document.getElementById('primaryForm').checked = primaryForm === '1';
-    document.getElementById('search-form').dispatchEvent(new Event('submit'));
-
-
     let btn = document.getElementById('scrollToTop');
 
     window.addEventListener('scroll', () => {

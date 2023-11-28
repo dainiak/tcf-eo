@@ -1,4 +1,4 @@
-task1 = [
+window.part1_questions = [
  "Avez-vous d\u00e9j\u00e0 voyag\u00e9 \u00e0 l\u2019\u00e9tranger ? Si oui, o\u00f9 \u00eates-vous all\u00e9(e) et qu\u2019avez-vous aim\u00e9 dans ces voyages ?",
  "D\u00e9crivez des \u00e9v\u00e9nement marquant dans votre vie.",
  "D\u00e9crivez vos projets futurs.",
