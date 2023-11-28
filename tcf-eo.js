@@ -1,3 +1,5 @@
+let task0 = "Pr\u00e9sentez-vous bri\u00e8vement.";
+
 function gotoTranslation(e) {
     let t = e.target;
     while(t.tagName.toLowerCase() !== 'tr' && t.id !== 'results-table') {
