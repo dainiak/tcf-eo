@@ -16,6 +16,84 @@ function filterObjectsByTags(objects, tagsSubset) {
     });
 }
 
+function createStopwatchButton(initialTime) {
+    const stopwatchButton = document.createElement('button');
+    stopwatchButton.classList.add('btn', 'btn-primary', 'm-1');
+    const stopwatchIconHTML = '<i class="fas fa-stopwatch"></i>';
+    stopwatchButton.innerHTML = stopwatchIconHTML;
+    let interval = null;
+    function startTimer() {
+        interval && clearInterval(interval);
+        interval = null;
+        let timeLeft = initialTime;
+        let setText = () => {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            stopwatchButton.innerHTML = stopwatchIconHTML + "&nbsp;" + minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+        }
+        setText();
+
+        interval = setInterval(() => {
+            if (--timeLeft < 0) {
+                interval && clearInterval(interval);
+                interval = null;
+                stopwatchButton.textContent = stopwatchIconHTML + "&nbsp;" + "0:00";
+                return;
+            }
+            setText();
+        }, 1000);
+    }
+    stopwatchButton.addEventListener('click', startTimer);
+    return stopwatchButton;
+}
+
+function createToggles(data) {
+    const container = document.createElement('div');
+    container.classList.add('container');
+
+    let ideasDiv = null;
+    let essayDiv = null;
+
+    if(data.i) {
+        const ideasButton = document.createElement('button');
+        ideasButton.classList.add('btn', 'btn-primary', 'm-1');
+        ideasButton.setAttribute('data-bs-toggle', 'collapse');
+        ideasButton.setAttribute('data-bs-target', '#ideasDiv');
+        ideasButton.innerHTML = '<i class="fas fa-lightbulb"></i>';
+        container.appendChild(ideasButton);
+
+        ideasDiv = document.createElement('div');
+        ideasDiv.id = 'ideasDiv';
+        ideasDiv.classList.add('collapse');
+        const ideasList = document.createElement('ul');
+        data.i.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.textContent = item;
+            ideasList.appendChild(listItem);
+        });
+        ideasDiv.innerHTML = '<p>Voici quelques idées pour votre monologue :</p>';
+        ideasDiv.appendChild(ideasList);
+    }
+
+    if(data.e) {
+        const essayButton = document.createElement('button');
+        essayButton.classList.add('btn', 'btn-primary', 'm-1');
+        essayButton.setAttribute('data-bs-toggle', 'collapse');
+        essayButton.setAttribute('data-bs-target', '#essayDiv');
+        essayButton.innerHTML = '<i class="fas fa-file-alt"></i>';
+        container.appendChild(essayButton);
+        essayDiv = document.createElement('div');
+        essayDiv.id = 'essayDiv';
+        essayDiv.classList.add('collapse');
+        essayDiv.innerHTML = data.e;
+    }
+
+    container.appendChild(createStopwatchButton(270));
+    ideasDiv && container.appendChild(ideasDiv);
+    essayDiv && container.appendChild(essayDiv);
+    return container;
+}
+
 function displayQuestion(questionObject) {
     if(!questionObject) {
         return document.createTextNode('Aucune question ne correspond à vos critères.');
@@ -46,18 +124,21 @@ function displayQuestion(questionObject) {
         details.innerHTML = '<b>Détails possibles à demander:</b> ' + questionObject.d.join(', ') + '. ';
         ul.appendChild(details);
         divBody.appendChild(ul);
+        divBody.appendChild(createStopwatchButton(330));
     }
     else if(questionObject.t) {
         const p = document.createElement('p');
         p.className = 'card-text';
         p.textContent = questionObject.q;
         divBody.appendChild(p);
+        divBody.appendChild(createToggles(questionObject));
     }
     else {
         const p = document.createElement('p');
         p.className = 'card-text';
         p.textContent = 'Pr\u00e9sentez-vous bri\u00e8vement et d\u00e9crivez ' + questionObject;
         divBody.appendChild(p);
+        divBody.appendChild(createStopwatchButton(120));
     }
 
     div.appendChild(divBody);
