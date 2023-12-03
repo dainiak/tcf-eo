@@ -22,22 +22,28 @@ function createStopwatchButton(initialTime) {
     const stopwatchIconHTML = '<i class="fas fa-stopwatch"></i>';
     stopwatchButton.innerHTML = stopwatchIconHTML;
     let interval = null;
+    let timeLeft = initialTime;
+    let setText = () => {
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        let timeText = minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+        if (timeLeft < 20) {
+            timeText = '<span class="blinking">' + timeText + '</span>';
+        }
+        stopwatchButton.innerHTML = stopwatchIconHTML + "&nbsp;" + timeText;
+    }
     function startTimer() {
         interval && clearInterval(interval);
         interval = null;
-        let timeLeft = initialTime;
-        let setText = () => {
-            let minutes = Math.floor(timeLeft / 60);
-            let seconds = timeLeft % 60;
-            stopwatchButton.innerHTML = stopwatchIconHTML + "&nbsp;" + minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
-        }
+        timeLeft = initialTime;
         setText();
 
         interval = setInterval(() => {
             if (--timeLeft < 0) {
                 interval && clearInterval(interval);
                 interval = null;
-                stopwatchButton.textContent = stopwatchIconHTML + "&nbsp;" + "0:00";
+                timeLeft = 0;
+                setText();
                 return;
             }
             setText();
@@ -71,7 +77,7 @@ function createToggles(data) {
             listItem.textContent = item;
             ideasList.appendChild(listItem);
         });
-        ideasDiv.innerHTML = '<p>Voici quelques idées pour votre monologue :</p>';
+        ideasDiv.innerHTML = '<p><b>Voici quelques idées pour votre monologue :</b></p>';
         ideasDiv.appendChild(ideasList);
     }
 
