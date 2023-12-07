@@ -2,6 +2,7 @@
     display: inline-block;
     margin-right: 10px;
 }
+
 span.blinking {
     animation-name: blinkRedWhite;
     animation-duration: 0.7s;

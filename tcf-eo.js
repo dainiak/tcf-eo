@@ -19,18 +19,19 @@ function filterObjectsByTags(objects, tagsSubset) {
 function createStopwatchButton(initialTime) {
     const stopwatchButton = document.createElement('button');
     stopwatchButton.classList.add('btn', 'btn-primary', 'm-1');
-    const stopwatchIconHTML = '<i class="fas fa-stopwatch"></i>';
-    stopwatchButton.innerHTML = stopwatchIconHTML;
+    stopwatchButton.innerHTML = '<i class="fas fa-stopwatch"></i><span></span>';
+    const span = stopwatchButton.querySelector('span');
     let interval = null;
     let timeLeft = initialTime;
     let setText = () => {
+        if (timeLeft < 20) {
+            !span.classList.contains('blinking') && span.classList.add('blinking');
+        } else {
+            span.classList.contains('blinking') && span.classList.remove('blinking');
+        }
         let minutes = Math.floor(timeLeft / 60);
         let seconds = timeLeft % 60;
-        let timeText = minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
-        if (timeLeft < 20) {
-            timeText = '<span class="blinking">' + timeText + '</span>';
-        }
-        stopwatchButton.innerHTML = stopwatchIconHTML + "&nbsp;" + timeText;
+        span.innerHTML = "&nbsp;" + minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
     }
     function startTimer() {
         interval && clearInterval(interval);
@@ -53,10 +54,40 @@ function createStopwatchButton(initialTime) {
     return stopwatchButton;
 }
 
-function createToggles(data) {
+function createToggles2(data) {
     const container = document.createElement('div');
     container.classList.add('container');
+    let questionsDiv = null;
 
+    if(data.q) {
+        const questionsButton = document.createElement('button');
+        questionsButton.classList.add('btn', 'btn-primary', 'm-1');
+        questionsButton.setAttribute('data-bs-toggle', 'collapse');
+        questionsButton.setAttribute('data-bs-target', '#questionsDiv');
+        questionsButton.innerHTML = '<i class="fas fa-file-alt"></i>';
+        container.appendChild(questionsButton);
+
+        questionsDiv = document.createElement('div');
+        questionsDiv.id = 'questionsDiv';
+        questionsDiv.classList.add('collapse');
+        const questionList = document.createElement('ul');
+        data.q.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.textContent = item;
+            questionList.appendChild(listItem);
+        });
+        questionsDiv.innerHTML = '<p><b>Voici quelques questions pour le dialogue :</b></p>';
+        questionsDiv.appendChild(questionList);
+    }
+
+    container.appendChild(createStopwatchButton(330));
+    questionsDiv && container.appendChild(questionsDiv);
+    return container;
+}
+
+function createToggles3(data) {
+    const container = document.createElement('div');
+    container.classList.add('container');
     let ideasDiv = null;
     let essayDiv = null;
 
@@ -130,14 +161,14 @@ function displayQuestion(questionObject) {
         details.innerHTML = '<b>Détails possibles à demander:</b> ' + questionObject.d.join(', ') + '. ';
         ul.appendChild(details);
         divBody.appendChild(ul);
-        divBody.appendChild(createStopwatchButton(330));
+        divBody.appendChild(createToggles2(questionObject));
     }
     else if(questionObject.t) {
         const p = document.createElement('p');
         p.className = 'card-text';
         p.textContent = questionObject.q;
         divBody.appendChild(p);
-        divBody.appendChild(createToggles(questionObject));
+        divBody.appendChild(createToggles3(questionObject));
     }
     else {
         const p = document.createElement('p');
@@ -146,6 +177,7 @@ function displayQuestion(questionObject) {
         divBody.appendChild(p);
         divBody.appendChild(createStopwatchButton(120));
     }
+
 
     div.appendChild(divBody);
     return div;

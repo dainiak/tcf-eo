@@ -1,5 +1,25 @@
 window.part2_questions = [
  {
+  "t": ["enfants","ville","culture"],
+  "ev": "votre ami",
+  "ex": "nouvel arrivant au Canada",
+  "g": "trouver un parc de divertissement pour ses enfants",
+  "s": "un parc de divertissement",
+  "d": ["emplacement","types de jeux","horaires","tarifs","services disponibles"],
+  "q": [
+   "Pourriez-vous me dire où se trouve le parc de divertissement pour enfants le plus proche en ville ?",
+   "Quels types de jeux et activités sont disponibles pour les enfants dans ce parc de divertissement ?",
+   "Quelles sont les heures d'ouverture et de fermeture du parc de divertissement ?",
+   "Pouvez-vous me fournir des informations sur les frais d'entrée ou les prix des billets pour le parc de divertissement ?",
+   "Y a-t-il des tranches d'âge spécifiques auxquelles le parc s'adresse, ou est-il adapté aux enfants de tous âges ?",
+   "Quelles mesures de sécurité et protocoles sont mis en place dans le parc de divertissement pour assurer la sécurité des enfants ?",
+   "Y a-t-il des événements saisonniers ou des attractions spéciales actuellement disponibles dans le parc ?",
+   "Le parc propose-t-il des options de restauration ? Y a-t-il des menus adaptés aux enfants ?",
+   "Y a-t-il des zones de repos, des installations pour changer les bébés, ou des postes de premiers secours disponibles dans le parc ?",
+   "Le parc de divertissement est-il facilement accessible par les transports en public, et dispose-t-il de places de parking ?"
+  ]
+ },
+ {
   "t": ["enfants","ville","sport","culture"],
   "ev": "parent d\u2019\u00e9l\u00e8ve",
   "ex": "parent souhaitant inscrire ses enfants \u00e0 une activit\u00e9 apr\u00e8s l\u2019\u00e9cole",
@@ -14,14 +34,6 @@ window.part2_questions = [
   "g": "se renseigner sur l\u2019inscription de son enfant \u00e0 l\u2019\u00e9cole",
   "s": "les \u00e9coles du quartier",
   "d": ["adresse","enseignants","activit\u00e9s","r\u00e9putation","infrastructures"]
- },
- {
-  "t": ["enfants","ville","culture"],
-  "ev": "votre ami",
-  "ex": "nouvel arrivant au Canada",
-  "g": "trouver un parc de divertissement pour ses enfants",
-  "s": "un parc de divertissement",
-  "d": ["emplacement","types de jeux","horaires","tarifs","services disponibles"]
  },
  {
   "t": ["enfants","travail"],
@@ -141,7 +153,19 @@ window.part2_questions = [
   "ex": "client souhaitant passer les vacances au Qu\u00e9bec",
   "g": "se renseigner sur les vacances au Qu\u00e9bec",
   "s": "vacances au Qu\u00e9bec",
-  "d": ["tarif","lieux recommand\u00e9s","h\u00e9bergement","activit\u00e9s touristiques","options de transport"]
+  "d": ["tarif","lieux recommand\u00e9s","h\u00e9bergement","activit\u00e9s touristiques","options de transport"],
+  "q": [
+   "Quels sont les tarifs moyens pour un séjour au Québec pendant la période que j'envisage ?",
+   "Pouvez-vous recommander des lieux incontournables à visiter au Québec pour un voyageur comme moi ?",
+   "Quelles sont les meilleures options d'hébergement en termes de confort et de budget au Québec ?",
+   "Quelles activités touristiques uniques le Québec offre-t-il que je ne devrais pas manquer ?",
+   "Quelles sont les options de transport disponibles pour se déplacer au sein du Québec ?",
+   "Y a-t-il des offres de voyage tout compris pour le Québec qui incluent le vol, l'hébergement et les activités touristiques ?",
+   "Quels conseils pouvez-vous donner concernant les meilleures périodes de l'année pour visiter le Québec ?",
+   "Le Québec propose-t-il des options de séjour adaptées aux familles avec enfants ?",
+   "Pouvez-vous suggérer des itinéraires de voyage pour une semaine au Québec couvrant les principales attractions ?",
+   "Existe-t-il des forfaits vacances axés sur les expériences culturelles et gastronomiques au Québec ?"
+  ]
  },
  {
   "t": ["voyages","culture"],
