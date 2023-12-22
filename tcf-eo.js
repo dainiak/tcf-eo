@@ -214,7 +214,7 @@ for(let taskNumber of [1, 2, 3]) {
     const tags = getUniqueTags(questions);
     const checkboxes = createCheckboxes(tags, `task${taskNumber}_`);
     const tagsContainer = document.getElementById(`tags${taskNumber}`);
-    checkboxes.forEach(checkbox => tagsContainer.appendChild(checkbox));
+    checkboxes.forEach(checkbox => (checkbox instanceof Node) && tagsContainer.appendChild(checkbox));
 
     document.getElementById(`random${taskNumber}`).addEventListener('click', () => {
         const checkedTags = taskNumber > 1 && Array.from(tagsContainer.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
