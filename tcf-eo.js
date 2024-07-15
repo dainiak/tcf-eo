@@ -1,4 +1,6 @@
 (() => {
+    document.body.setAttribute("data-bs-theme", window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light");
+
     const getUniqueTags = (objects) => {
         const tagsSet = new Set();
         objects.forEach(obj => obj.t && Array.isArray(obj.t) && obj.t.forEach(tag => tagsSet.add(tag)));
