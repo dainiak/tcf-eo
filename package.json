@@ -1,0 +1,25 @@
+{
+    "name": "tcf-eo",
+    "version": "1.0.0",
+    "description": "[TCF-EO](https://www.dainiak.com/tcf-eo/) is a tool for French learners that allows to generate random question sets for a simulation of the Oral Expression part of the TCF exam.",
+    "main": "tcf-eo.js",
+    "scripts": {
+        "lint": "biome lint .",
+        "format": "biome format --write .",
+        "check": "biome check --write ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dainiak/tcf-eo.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/dainiak/tcf-eo/issues"
+    },
+    "homepage": "https://github.com/dainiak/tcf-eo#readme",
+    "devDependencies": {
+        "@biomejs/biome": "2.0.6"
+    }
+}

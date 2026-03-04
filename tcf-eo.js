@@ -1,15 +1,17 @@
 (() => {
-    document.body.setAttribute("data-bs-theme", window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light");
+    document.body.setAttribute(
+        'data-bs-theme',
+        window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+    );
 
     const getUniqueTags = (objects) => {
         const tagsSet = new Set();
-        objects.forEach(obj => obj.t && Array.isArray(obj.t) && obj.t.forEach(tag => tagsSet.add(tag)));
+        objects.forEach((obj) => obj.t && Array.isArray(obj.t) && obj.t.forEach((tag) => tagsSet.add(tag)));
         return Array.from(tagsSet).sort();
-    }
+    };
 
-    const filterObjectsByTags = (objects, tagsSubset) => objects.filter(
-        obj => tagsSubset.length === 0 || tagsSubset.every(tag => obj.t && obj.t.includes(tag))
-    );
+    const filterObjectsByTags = (objects, tagsSubset) =>
+        objects.filter((obj) => tagsSubset.length === 0 || tagsSubset.every((tag) => obj.t?.includes(tag)));
 
     const createStopwatchButton = (initialTime) => {
         const stopwatchButton = document.createElement('button');
@@ -18,12 +20,12 @@
         const span = stopwatchButton.querySelector('span');
         let interval = null;
         let timeLeft = initialTime;
-        let setText = () => {
-            timeLeft < 20 ? !span.classList.contains('blinking') && span.classList.add('blinking') : span.classList.remove('blinking');
-            let minutes = Math.floor(timeLeft / 60);
-            let seconds = timeLeft % 60;
+        const setText = () => {
+            span.classList.toggle('blinking', timeLeft < 20);
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
             span.innerHTML = `&nbsp;${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-        }
+        };
 
         const startTimer = () => {
             interval && clearInterval(interval);
@@ -41,88 +43,59 @@
                 }
                 setText();
             }, 1000);
-        }
+        };
 
         stopwatchButton.addEventListener('click', startTimer);
         return stopwatchButton;
-    }
+    };
 
-    const createToggles2 = (data) => {
+    const createList = (items) => {
+        const ul = document.createElement('ul');
+        items.forEach((item) => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            ul.appendChild(li);
+        });
+        return ul;
+    };
+
+    const createCollapsibleSection = (id, icon, contentElement) => {
+        const button = document.createElement('button');
+        button.classList.add('btn', 'btn-primary', 'm-1');
+        button.setAttribute('data-bs-toggle', 'collapse');
+        button.setAttribute('data-bs-target', `#${id}`);
+        button.innerHTML = `<i class="fas fa-${icon}"></i>`;
+
+        const div = document.createElement('div');
+        div.id = id;
+        div.classList.add('collapse');
+        div.appendChild(contentElement);
+
+        return { button, div };
+    };
+
+    const createToggles = (data, sections, stopwatchTime) => {
         const container = document.createElement('div');
         container.classList.add('container');
-        let questionsDiv = null;
+        const collapsibles = [];
 
-        if (data.q) {
-            const questionsButton = document.createElement('button');
-            questionsButton.classList.add('btn', 'btn-primary', 'm-1');
-            questionsButton.setAttribute('data-bs-toggle', 'collapse');
-            questionsButton.setAttribute('data-bs-target', '#questionsDiv');
-            questionsButton.innerHTML = '<i class="fas fa-file-alt"></i>';
-            container.appendChild(questionsButton);
-
-            questionsDiv = document.createElement('div');
-            questionsDiv.id = 'questionsDiv';
-            questionsDiv.classList.add('collapse');
-            const questionList = document.createElement('ul');
-            data.q.forEach(item => {
-                const listItem = document.createElement('li');
-                listItem.textContent = item;
-                questionList.appendChild(listItem);
-            });
-            questionsDiv.innerHTML = '<p><b>Voici quelques questions pour le dialogue :</b></p>';
-            questionsDiv.appendChild(questionList);
+        for (const { field, id, icon, heading } of sections) {
+            if (!data[field]) continue;
+            const content = document.createElement('div');
+            if (heading) {
+                content.innerHTML = `<p><b>${heading}</b></p>`;
+                content.appendChild(createList(data[field]));
+            } else {
+                content.innerHTML = data[field];
+            }
+            collapsibles.push(createCollapsibleSection(id, icon, content));
         }
 
-        container.appendChild(createStopwatchButton(330));
-        questionsDiv && container.appendChild(questionsDiv);
+        collapsibles.forEach(({ button }) => container.appendChild(button));
+        container.appendChild(createStopwatchButton(stopwatchTime));
+        collapsibles.forEach(({ div }) => container.appendChild(div));
         return container;
-    }
-
-    const createToggles3 = (data) => {
-        const container = document.createElement('div');
-        container.classList.add('container');
-        let ideasDiv = null;
-        let essayDiv = null;
-
-        if (data.i) {
-            const ideasButton = document.createElement('button');
-            ideasButton.classList.add('btn', 'btn-primary', 'm-1');
-            ideasButton.setAttribute('data-bs-toggle', 'collapse');
-            ideasButton.setAttribute('data-bs-target', '#ideasDiv');
-            ideasButton.innerHTML = '<i class="fas fa-lightbulb"></i>';
-            container.appendChild(ideasButton);
-
-            ideasDiv = document.createElement('div');
-            ideasDiv.id = 'ideasDiv';
-            ideasDiv.classList.add('collapse');
-            const ideaList = document.createElement('ul');
-            data.i.forEach(item => {
-                const listItem = document.createElement('li');
-                listItem.textContent = item;
-                ideaList.appendChild(listItem);
-            });
-            ideasDiv.innerHTML = '<p><b>Voici quelques idées pour votre monologue :</b></p>';
-            ideasDiv.appendChild(ideaList);
-        }
-
-        if (data.e) {
-            const essayButton = document.createElement('button');
-            essayButton.classList.add('btn', 'btn-primary', 'm-1');
-            essayButton.setAttribute('data-bs-toggle', 'collapse');
-            essayButton.setAttribute('data-bs-target', '#essayDiv');
-            essayButton.innerHTML = '<i class="fas fa-file-alt"></i>';
-            container.appendChild(essayButton);
-            essayDiv = document.createElement('div');
-            essayDiv.id = 'essayDiv';
-            essayDiv.classList.add('collapse');
-            essayDiv.innerHTML = data.e;
-        }
-
-        container.appendChild(createStopwatchButton(270));
-        ideasDiv && container.appendChild(ideasDiv);
-        essayDiv && container.appendChild(essayDiv);
-        return container;
-    }
+    };
 
     const displayQuestion = (questionObject) => {
         if (!questionObject) {
@@ -138,29 +111,56 @@
             const ul = document.createElement('ul');
             ul.className = 'card-text';
             const topic = document.createElement('li');
-            topic.innerHTML = `<b>Sujet du dialogue:</b> ${questionObject.s}. `;
+            topic.innerHTML = `<b>Sujet du dialogue&nbsp;:</b> ${questionObject.s}. `;
             ul.appendChild(topic);
             const evaluator = document.createElement('li');
-            evaluator.innerHTML = `<b>Rôle d’évaluateur:</b> ${questionObject.ev}. `;
+            evaluator.innerHTML = `<b>Rôle d’évaluateur&nbsp;:</b> ${questionObject.ev}. `;
             ul.appendChild(evaluator);
             const examinee = document.createElement('li');
-            examinee.innerHTML = `<b>Votre rôle:</b> ${questionObject.ex}. `;
+            examinee.innerHTML = `<b>Votre rôle&nbsp;:</b> ${questionObject.ex}. `;
             ul.appendChild(examinee);
             const goal = document.createElement('li');
-            goal.innerHTML = `<b>Votre objectif:</b> ${questionObject.g}. `;
+            goal.innerHTML = `<b>Votre objectif&nbsp;:</b> ${questionObject.g}. `;
             ul.appendChild(goal);
             const details = document.createElement('li');
             details.className = 'text-muted';
-            details.innerHTML = `<b>Détails possibles à demander:</b> ${questionObject.d.join(', ')}. `;
+            details.innerHTML = `<b>Détails possibles à demander&nbsp;:</b> ${questionObject.d.join(', ')}. `;
             ul.appendChild(details);
             divBody.appendChild(ul);
-            divBody.appendChild(createToggles2(questionObject));
+            divBody.appendChild(
+                createToggles(
+                    questionObject,
+                    [
+                        {
+                            field: 'q',
+                            id: 'questionsDiv',
+                            icon: 'file-alt',
+                            heading: 'Voici quelques questions pour le dialogue :',
+                        },
+                    ],
+                    330,
+                ),
+            );
         } else if (questionObject.t) {
             const p = document.createElement('p');
             p.className = 'card-text';
             p.textContent = questionObject.q;
             divBody.appendChild(p);
-            divBody.appendChild(createToggles3(questionObject));
+            divBody.appendChild(
+                createToggles(
+                    questionObject,
+                    [
+                        {
+                            field: 'i',
+                            id: 'ideasDiv',
+                            icon: 'lightbulb',
+                            heading: 'Voici quelques idées pour votre monologue :',
+                        },
+                        { field: 'e', id: 'essayDiv', icon: 'file-alt' },
+                    ],
+                    270,
+                ),
+            );
         } else {
             const p = document.createElement('p');
             p.className = 'card-text';
@@ -171,56 +171,67 @@
 
         div.appendChild(divBody);
         return div;
-    }
+    };
 
-    const createCheckboxes = (tags, prefix) => tags.map((tag, index) => {
-        const div = document.createElement('div');
-        div.className = 'form-check form-check-inline';
+    const createCheckboxes = (tags, prefix) =>
+        tags.map((tag, index) => {
+            const div = document.createElement('div');
+            div.className = 'form-check form-check-inline';
 
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = false;
-        checkbox.className = 'form-check-input';
-        checkbox.value = tag;
-        checkbox.id = `${prefix}checkbox${index}`;
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = false;
+            checkbox.className = 'form-check-input';
+            checkbox.value = tag;
+            checkbox.id = `${prefix}checkbox${index}`;
 
-        const label = document.createElement('label');
-        label.className = 'form-check-label';
-        label.htmlFor = checkbox.id;
-        label.textContent = tag;
+            const label = document.createElement('label');
+            label.className = 'form-check-label';
+            label.htmlFor = checkbox.id;
+            label.textContent = tag;
 
-        div.appendChild(checkbox);
-        div.appendChild(label);
+            div.appendChild(checkbox);
+            div.appendChild(label);
 
-        return div;
-    });
+            return div;
+        });
 
     const gotoTranslation = (e) => {
-        let t = e.target;
-        while (t.tagName.toLowerCase() !== 'td')
-            t = t.parentElement;
-
-        let phrase = t.textContent.trim();
+        const td = e.target.closest('td');
+        if (!td) return;
+        const phrase = td.textContent.trim();
         window.open(`https://translate.google.com/?sl=fr&tl=en&text=${phrase}&op=translate`, '_blank');
-    }
+    };
 
-    for (let taskNumber of [1, 2, 3]) {
+    for (const taskNumber of [1, 2, 3]) {
         const questions = window[`part${taskNumber}_questions`];
         const tags = getUniqueTags(questions);
         const checkboxes = createCheckboxes(tags, `task${taskNumber}_`);
         const tagsContainer = document.getElementById(`tags${taskNumber}`);
-        checkboxes.forEach(checkbox => (checkbox instanceof Node) && tagsContainer.appendChild(checkbox));
+        const contentContainer = document.getElementById(`content${taskNumber}`);
+        checkboxes.forEach((checkbox) => checkbox instanceof Node && tagsContainer.appendChild(checkbox));
 
         document.getElementById(`random${taskNumber}`).addEventListener('click', () => {
-            const checkedTags = taskNumber > 1 && Array.from(tagsContainer.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+            const checkedTags =
+                taskNumber > 1 &&
+                Array.from(tagsContainer.querySelectorAll('input[type="checkbox"]:checked')).map(
+                    (checkbox) => checkbox.value,
+                );
             const objects = taskNumber > 1 ? filterObjectsByTags(questions, checkedTags) : questions;
             const randomObject = objects[Math.floor(Math.random() * objects.length)];
-            document.getElementById(`content${taskNumber}`).innerHTML = '';
-            document.getElementById(`content${taskNumber}`).appendChild(displayQuestion(randomObject));
+            contentContainer.innerHTML = '';
+            contentContainer.appendChild(displayQuestion(randomObject));
         });
 
-        const contentContainer = document.getElementById(`content${taskNumber}`);
         contentContainer.innerHTML = '← Cliquez sur le bouton à gauche pour sélectionner une question aléatoire.';
         contentContainer.addEventListener('dblclick', gotoTranslation);
     }
+
+    const scrollToTopButton = document.getElementById('scrollToTop');
+    window.addEventListener('scroll', () => {
+        scrollToTopButton.style.display = window.scrollY > 200 ? 'block' : 'none';
+    });
+    scrollToTopButton.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 })();
